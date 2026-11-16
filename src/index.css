@@ -1,0 +1,644 @@
+@import "tailwindcss";
+
+/* The whole interface is a circuit board: solder-mask green, gold traces,
+   silkscreen-white lettering. LED colours are reserved for meaning. */
+@theme {
+  --font-display: "Chakra Petch", "Noto Sans Armenian", "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-sans: "IBM Plex Sans", "Noto Sans Armenian", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Noto Sans Armenian", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-board-950: #04110e;
+  --color-board-900: #071a16;
+  --color-board-800: #0b2620;
+  --color-board-700: #10342c;
+  --color-board-600: #17463c;
+  --color-board-500: #21604f;
+  --color-mask: #1a5547;
+
+  --color-silk: #eef3ea;
+  --color-silk-dim: #b1c7bc;
+  --color-silk-mute: #84a093;
+
+  --color-gold: #edbd4f;
+  --color-gold-dim: #a8842f;
+  --color-copper: #f39258;
+
+  --color-led-cyan: #5ee6ff; /* symlinks, X-ray, flags */
+  --color-led-violet: #b9a0ff; /* inodes, hard links */
+  --color-led-red: #ff6e66; /* stderr */
+  --color-led-green: #7dffa3; /* success */
+  --color-glitch: #ff5bdc; /* corruption */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-board-950);
+  color: var(--color-silk);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-board-500) transparent;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-board-950);
+}
+
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- shared bits ---------- */
+
+/* Component designators, the way they are printed on a real board. */
+@layer components {
+  .silk {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+}
+
+.prose-codex code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--color-gold);
+  background: var(--color-board-700);
+  border: 1px solid var(--color-board-600);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.pcb {
+  background-color: var(--color-board-900);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 58%, rgba(33, 96, 79, 0.55), transparent 70%),
+    radial-gradient(circle, rgba(237, 189, 79, 0.11) 1px, transparent 1.3px);
+  background-size:
+    100% 100%,
+    22px 22px;
+}
+
+.crt {
+  background:
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px),
+    var(--color-board-950);
+}
+
+.caret {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+/* ---------- world: SVG text ---------- */
+
+svg text {
+  font-family: var(--font-mono);
+}
+svg .lbl {
+  font-size: 9.5px;
+  font-weight: 500;
+  paint-order: stroke;
+  stroke: var(--color-board-950);
+  stroke-width: 3.2px;
+  stroke-linejoin: round;
+}
+
+/* ---------- world: ambient motion ---------- */
+
+.float {
+  animation: float 3.4s ease-in-out infinite;
+}
+.float-slow {
+  animation: float 4.8s ease-in-out infinite;
+}
+.jitter {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: jitter 0.5s steps(2) infinite;
+}
+.glitchbar {
+  animation: glitchbar 0.9s steps(3) infinite;
+}
+.portal-spin {
+  animation: dash 1.6s linear infinite;
+}
+.flicker {
+  animation: flicker 1.15s linear infinite;
+}
+.led-on {
+  filter: drop-shadow(0 0 3px currentColor);
+}
+.core-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: core 2.2s ease-in-out infinite;
+}
+
+/* ---------- world: command effects ---------- */
+
+.fx-rise {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: rise 0.75s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.fx-materialize {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: materialize 0.65s ease-out both;
+}
+.fx-vanish {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: vanish 0.6s steps(7) both;
+}
+.fx-tele-out {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tele-out 0.55s ease-in both;
+}
+.fx-tele-in {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tele-in 0.6s ease-out both;
+}
+.fx-pulse {
+  animation: pulse-once 0.8s ease-out both;
+}
+.fx-cast {
+  stroke-dasharray: 5 7;
+  animation: cast 0.8s ease-out both;
+}
+.fx-beam {
+  animation: beam 0.9s ease-out both;
+}
+.fx-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring 0.7s ease-out both;
+}
+.fx-scan {
+  animation: scan 1s cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+.fx-bump {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: bump 0.6s ease-out both;
+}
+.fx-shake {
+  animation: shake 0.45s linear both;
+}
+.fx-barrier {
+  animation: barrier 0.9s ease-out both;
+}
+.fx-pop {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pop 2.4s ease-out both;
+}
+.room-in {
+  animation: room-in 0.45s ease-out both;
+}
+.holo-in {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: holo 0.35s ease-out both;
+}
+
+/* ---------- refinery ---------- */
+
+.tube-flow {
+  stroke-dasharray: 6 10;
+  animation: flow 0.7s linear infinite;
+}
+.drip {
+  animation: drip 0.9s ease-in infinite;
+}
+.tank-drain {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tank-drain 0.75s ease-in both;
+}
+.tank-fill {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tank-append 0.9s ease-out 0.8s both;
+}
+.tank-append {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tank-append 1.1s ease-out both;
+}
+.slide-up {
+  animation: slide-up 0.3s ease-out both;
+}
+.pour {
+  animation: pour 0.35s ease-out both;
+}
+.fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+/* ---------- keyframes ---------- */
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes jitter {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1.5px, 0.5px) skewX(5deg);
+  }
+  50% {
+    transform: translate(1.5px, -1px);
+  }
+  75% {
+    transform: translate(-0.5px, 0) skewX(-4deg);
+  }
+}
+@keyframes glitchbar {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  33% {
+    opacity: 1;
+    transform: translateX(5px);
+  }
+  66% {
+    opacity: 0.7;
+    transform: translateX(-4px);
+  }
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 0.2;
+  }
+  12% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.9;
+  }
+  52% {
+    opacity: 0.15;
+  }
+  56% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 0.45;
+  }
+}
+@keyframes core {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+@keyframes rise {
+  from {
+    transform: scaleY(0);
+    filter: brightness(2.2);
+  }
+  70% {
+    transform: scaleY(1.1);
+  }
+  to {
+    transform: scaleY(1);
+    filter: none;
+  }
+}
+@keyframes materialize {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.5);
+    filter: brightness(3);
+  }
+  60% {
+    opacity: 1;
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes vanish {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  30% {
+    opacity: 1;
+    transform: skewX(20deg) scale(1.1, 0.9);
+    filter: hue-rotate(90deg) brightness(2);
+  }
+  60% {
+    opacity: 0.7;
+    transform: skewX(-24deg) scale(0.8, 1.2);
+    filter: hue-rotate(200deg) brightness(2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7, 0);
+  }
+}
+@keyframes tele-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px) scaleX(0.08);
+    filter: brightness(3);
+  }
+}
+@keyframes tele-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-70px) scaleX(0.08);
+    filter: brightness(3);
+  }
+  70% {
+    opacity: 1;
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes pulse-once {
+  0%,
+  100% {
+    filter: none;
+  }
+  35% {
+    filter: brightness(1.9) drop-shadow(0 0 5px var(--color-gold));
+  }
+}
+@keyframes cast {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 60;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes beam {
+  0% {
+    opacity: 0;
+    stroke-width: 1;
+  }
+  25% {
+    opacity: 1;
+    stroke-width: 5;
+  }
+  100% {
+    opacity: 0;
+    stroke-width: 1;
+  }
+}
+@keyframes ring {
+  0% {
+    opacity: 1;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+@keyframes scan {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(var(--to));
+    opacity: 0;
+  }
+}
+@keyframes bump {
+  0% {
+    transform: translate(0, 0);
+  }
+  28% {
+    transform: translate(0, -18px);
+  }
+  40% {
+    transform: translate(0, -12px) rotate(-8deg);
+  }
+  60% {
+    transform: translate(0, 3px) rotate(6deg);
+  }
+  80% {
+    transform: translate(0, 0) rotate(-3deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+@keyframes barrier {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  16% {
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@keyframes room-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes holo {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+@keyframes drip {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@keyframes tank-drain {
+  from {
+    transform: scaleY(var(--from));
+  }
+  to {
+    transform: scaleY(0.001);
+  }
+}
+@keyframes tank-append {
+  0% {
+    transform: scaleY(var(--from));
+  }
+  100% {
+    transform: scaleY(var(--to));
+  }
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pour {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
