@@ -713,7 +713,7 @@ export const MISSIONS: Mission[] = [
     labs: [],
     story: [
       "Նախքան սեկտոր 7-ի գլխավոր որջը մտնելը, մենք պետք է ամրացնենք մեր մատակարարման գիծը։ Այստեղ անհրաժեշտ է համադրել Նախաբանի և Արար I-ի բոլոր հմտությունները։",
-      "Սկանավորեք թաքնված պահեստը (`ls -la`), կառուցեք խորը պահոց (`mkdir -p`), պատճենեք գաղտնի կոդը (`cp`), տեղափոխեք բոլոր մարտկոցները wildcard-ով (`mv *.cell`), գրանցեք կարգավիճակը (`echo >>`) և ստուգեք կոդը `cat`-ով։",
+      "Սկանավորեք թաքնված պահեստը (`ls -la`), կառուցեք խորը պահոց (`mkdir -p`), պատճենեք գաղտնի կոդը (`cp`), տեղափոխեք բոլոր `.cell` մարտկոցները wildcard-ով (`mv`), գրանցեք կարգավիճակը (`echo >>`) և ստուգեք կոդը `cat`-ով։",
     ],
     concepts: [
       { term: "Հրամանների համադրում", text: "Իրական առաջադրանքներում `ls -la`, `mkdir -p`, `cp`, `mv` և `>>` գործիքներն աշխատում են որպես մեկ միասնական շղթա։" },
@@ -765,18 +765,18 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "ls", (e) => e.flags.includes("a") || e.flags.includes("A")),
       },
       {
-        text: "Մեկ հրամանով կառուցեք `supply/armory` խորը պահոցը (`mkdir -p supply/armory`)։",
+        text: "Մեկ հրամանով կառուցեք `supply/armory` խորը պահոցը։",
         hint: "mkdir -p supply/armory",
         check: (c) => typeAt(c.fs, h("supply/armory")) === "dir",
       },
       {
-        text: "Պատճենեք թաքնված `.cipher.key` ֆայլը `supply/armory/` պահոցի մեջ (`cp .cipher.key supply/armory/`)։",
+        text: "Պատճենեք թաքնված `.cipher.key` ֆայլը `supply/armory/` պահոցի մեջ։",
         hint: "cp .cipher.key supply/armory/",
         needs: [1],
         check: (c) => read(c.fs, h("supply/armory/.cipher.key")) === "CIPHER-OMEGA-900\n",
       },
       {
-        text: "Տեղափոխեք բոլոր `.cell` մարտկոցները `supply/armory/`՝ օգտագործելով `*` wildcard-ը (`mv *.cell supply/armory/`)։",
+        text: "Տեղափոխեք բոլոր `.cell` մարտկոցները `supply/armory/`՝ օգտագործելով `*` wildcard-ը։",
         hint: "mv *.cell supply/armory/",
         needs: [1],
         check: (c) =>
@@ -786,7 +786,7 @@ export const MISSIONS: Mission[] = [
           !names(c.fs, HOME).some((n) => n.endsWith(".cell")),
       },
       {
-        text: "Ավելացրեք (`>>`) `READY=1` տողը `status.log` ֆայլի վերջից՝ պահպանելով սկզբնական տողը (`echo \"READY=1\" >> status.log`)։",
+        text: "Ավելացրեք (`>>`) `READY=1` տողը `status.log` ֆայլի վերջից՝ պահպանելով սկզբնական տողը։",
         hint: 'echo "READY=1" >> status.log',
         check: (c) => {
           const t = read(c.fs, h("status.log")) ?? "";
@@ -794,7 +794,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Ստուգեք տեղափոխված բանալին `cat supply/armory/.cipher.key` հրամանով։",
+        text: "Կարդացեք տեղափոխված `supply/armory/.cipher.key` բանալին։",
         hint: "cat supply/armory/.cipher.key",
         needs: [2],
         check: (c) => ran(c, "cat", (e) => e.out.some((l) => l.includes("CIPHER-OMEGA-900"))),
@@ -819,7 +819,7 @@ export const MISSIONS: Mission[] = [
     labs: [],
     story: [
       "Սեկտոր 7-ից առաջ INIT-ը հայտնաբերել է երկու լքված դիտակետ (`outpost_alpha` և `outpost_beta`), որտեղ մնացել են կարևոր տվյալներ և մատակարարման փաթեթներ։",
-      "Ստուգեք `mv` գործիքի տեղը (`which`), ստեղծեք կարճատում (`alias`), կառուցեք `fortress/comms` հանգույցը, պատճենեք տելեմետրիան (`cp`), տարհանեք բոլոր փաթեթները (`mv *.pack`), վերանվանեք `.tmp` փարոսը `.sig`-ի և թարմացրեք զեկույցը (`echo >>`)։",
+      "Ստուգեք `mv` գործիքի տեղը (`which`), ստեղծեք կարճատում (`alias`), կառուցեք `fortress/comms` հանգույցը, պատճենեք տելեմետրիան (`cp`), տարհանեք բոլոր `.pack` փաթեթները wildcard-ով (`mv`), վերանվանեք `.tmp` փարոսը `.sig`-ի և թարմացրեք զեկույցը (`echo >>`)։",
     ],
     concepts: [
       { term: "Գործիքների ստուգում + Կարճատում", text: "`which`-ը ցույց է տալիս ծրագրի ուղին, իսկ `alias`-ը ստեղծում է արագ հրամաններ հետախուզության համար։" },
@@ -865,22 +865,22 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ստուգեք `mv` գործիքի ճշգրիտ տեղը համակարգում `which mv` հրամանով։",
+        text: "Պարզեք `mv` գործիքի ճշգրիտ տեղը համակարգում (`which`)։",
         hint: "which mv",
         check: (c) => ran(c, "which", (e) => e.args.includes("mv")),
       },
       {
-        text: "Ստեղծեք `scan` անունով alias՝ `ls -la`-ն արագ կանչելու համար (`alias scan='ls -la'`)։",
+        text: "Ստեղծեք `scan` անունով alias՝ `ls -la` հրամանը արագ կանչելու համար։",
         hint: "alias scan='ls -la'",
         check: (c) => ran(c, "alias", (e) => e.args.some((x) => x.startsWith("scan="))),
       },
       {
-        text: "Կառուցեք `fortress/comms` կապի հանգույցը (`mkdir -p fortress/comms`)։",
+        text: "Կառուցեք `fortress/comms` կապի հանգույցը (մեկ հրամանով)։",
         hint: "mkdir -p fortress/comms",
         check: (c) => typeAt(c.fs, h("fortress/comms")) === "dir",
       },
       {
-        text: "Պատճենեք `outpost_alpha/telemetry.dat`-ը `fortress/comms/`՝ պահպանելով բնօրինակը `outpost_alpha`-ում (`cp outpost_alpha/telemetry.dat fortress/comms/`)։",
+        text: "Պատճենեք `outpost_alpha/telemetry.dat`-ը `fortress/comms/`՝ պահպանելով բնօրինակը `outpost_alpha`-ում։",
         hint: "cp outpost_alpha/telemetry.dat fortress/comms/",
         needs: [2],
         check: (c) =>
@@ -888,7 +888,7 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("outpost_alpha/telemetry.dat")) === "file",
       },
       {
-        text: "Տեղափոխեք `outpost_beta`-ի բոլոր `.pack` փաթեթները `fortress/comms/`՝ wildcard-ով (`mv outpost_beta/*.pack fortress/comms/`)։",
+        text: "Տեղափոխեք `outpost_beta`-ի բոլոր `.pack` փաթեթները `fortress/comms/`՝ wildcard-ով։",
         hint: "mv outpost_beta/*.pack fortress/comms/",
         needs: [2],
         check: (c) =>
@@ -978,24 +978,24 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "`whatis`-ի միջոցով կարդացեք `rmdir` հրամանի համառոտ նկարագրությունը (`whatis rmdir`)։",
+        text: "`whatis`-ի միջոցով կարդացեք `rmdir` հրամանի համառոտ նկարագրությունը։",
         hint: "whatis rmdir",
         check: (c) => ran(c, "whatis", (e) => e.args.includes("rmdir")),
       },
       {
-        text: "Ռենտգենով սկանավորեք `ruins` սենյակը (`ls -la ruins`)՝ տեսնելու թաքնված `.vault_key`-ը և `obsolete`-ը։",
+        text: "Ռենտգենով (`ls -la`) սկանավորեք `ruins` սենյակը՝ տեսնելու թաքնված `.vault_key`-ը և `obsolete`-ը։",
         hint: "ls -la ruins",
         check: (c) =>
           (c.xray != null && c.xray === idAt(c.fs, h("ruins"))) ||
           ran(c, "ls", (e) => (e.flags.includes("a") || e.flags.includes("A")) && (e.args.some((x) => x.includes("ruins")) || c.cwd === h("ruins"))),
       },
       {
-        text: "Հեռացրեք դատարկ `ruins/obsolete` սենյակը `rmdir ruins/obsolete` հրամանով։",
+        text: "Հեռացրեք դատարկ `ruins/obsolete` սենյակը (`rmdir`)։",
         hint: "rmdir ruins/obsolete",
         check: (c) => typeAt(c.fs, h("ruins/obsolete")) == null,
       },
       {
-        text: "Կառուցեք `fortress/archive/keys` խորը պահոցը (`mkdir -p fortress/archive/keys`)։",
+        text: "Կառուցեք `fortress/archive/keys` խորը պահոցը։",
         hint: "mkdir -p fortress/archive/keys",
         check: (c) => typeAt(c.fs, h("fortress/archive/keys")) === "dir",
       },
@@ -1085,27 +1085,27 @@ export const MISSIONS: Mission[] = [
             ran(c, "ls", (e) => e.flags.includes("a") || e.flags.includes("A"))),
       },
       {
-        text: "Ապահովագրեք սեկտորի միջուկը․ ստեղծեք `safe` պահոց (`mkdir -p safe`) և պատճենեք `core.dat`-ը դրա ներս (`cp core.dat safe/`)։",
+        text: "Ապահովագրեք սեկտորի միջուկը․ ստեղծեք `safe` պահոց և պատճենեք `core.dat`-ը դրա ներս։",
         hint: "mkdir -p safe && cp core.dat safe/",
         check: (c) => read(c.fs, h("sector_7/safe/core.dat")) === "SECTOR 7 CORE\nintegrity: 41%\n",
       },
       {
-        text: "Կարդացեք վահանի ապակոդավորման բանալին՝ `cat .chamber/.passkey`։",
+        text: "Կարդացեք `.chamber/.passkey` վահանի ապակոդավորման բանալին։",
         hint: "cat .chamber/.passkey",
         check: (c) => ran(c, "cat", (e) => e.args.some((x) => x.endsWith(".passkey"))),
       },
       {
-        text: "Ոչնչացրեք պահակային `worm.glitch`-ը (`rm worm.glitch`)։",
+        text: "Ոչնչացրեք պահակային `worm.glitch`-ը։",
         hint: "rm worm.glitch",
         check: (c) => countNames(c.fs, (n) => n === "worm.glitch") === 0,
       },
       {
-        text: "Ոչնչացրեք վահանը սնուցող `glitch_nest` բույնը (`rm -r glitch_nest`)։",
+        text: "Ոչնչացրեք վահանը սնուցող `glitch_nest` բույնը։",
         hint: "rm -r glitch_nest",
         check: (c) => countNames(c.fs, (n) => n === "glitch_nest") === 0,
       },
       {
-        text: "Պաշտպանիչ վահանն անջատված է․ մարտի բռնվեք և ոչնչացրեք Արար I-ի Բոսին՝ `rm .chamber/fragmenter.boss`։",
+        text: "Պաշտպանիչ վահանն անջատված է․ մարտի բռնվեք և ոչնչացրեք Արար I-ի Բոսին՝ `.chamber/fragmenter.boss`-ին։",
         hint: "rm .chamber/fragmenter.boss",
         needs: [0, 1, 2, 3, 4],
         check: (c) => countNames(c.fs, (n) => n === "fragmenter.boss") === 0,
@@ -1151,7 +1151,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք էներգիան կլանող `leech.glitch` խափանումը (`rm leech.glitch`)։",
+        text: "Ոչնչացրեք էներգիան կլանող `leech.glitch` խափանումը։",
         hint: "rm leech.glitch",
         check: (c) => countNames(c.fs, (n) => n === "leech.glitch") === 0,
       },
@@ -1332,7 +1332,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => c.cwd === h("relays"),
       },
       {
-        text: "Ոչնչացրեք կապը խլացնող `static.glitch` խափանումը (`rm static.glitch`)։",
+        text: "Ոչնչացրեք կապը խլացնող `static.glitch` խափանումը։",
         hint: "rm static.glitch",
         check: (c) => countNames(c.fs, (n) => n === "static.glitch") === 0,
       },
@@ -1425,7 +1425,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք վարակի աղբյուր `malware_nest` բույնը (`rm -r malware_nest`)։",
+        text: "Ոչնչացրեք վարակի աղբյուր `malware_nest` բույնը։",
         hint: "rm -r malware_nest",
         check: (c) => countNames(c.fs, (n) => n === "malware_nest") === 0,
       },
@@ -1512,7 +1512,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `bridge/control` կառավարման սենյակը (`mkdir -p bridge/control`)։",
+        text: "Կառուցեք `bridge/control` կառավարման սենյակը։",
         hint: "mkdir -p bridge/control",
         check: (c) => typeAt(c.fs, h("bridge/control")) === "dir",
       },
@@ -1527,7 +1527,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Ստեղծեք `logs_portal` անունով symbolic link home-ում, որը ցույց է տալիս `relays` սենյակի վրա (`ln -s relays logs_portal`)։",
+        text: "Ստեղծեք `logs_portal` անունով symbolic link home-ում, որը ցույց է տալիս `relays` սենյակի վրա։",
         hint: "ln -s relays logs_portal",
         check: (c) => typeAt(c.fs, h("logs_portal"), false) === "link" && typeAt(c.fs, h("logs_portal")) === "dir",
       },
@@ -1539,7 +1539,7 @@ export const MISSIONS: Mission[] = [
           (read(c.fs, h("bridge/control/status.log")) ?? "").startsWith("NODE-1 ONLINE\nNODE-3 ONLINE\nNODE-5 ONLINE"),
       },
       {
-        text: "Հաշվեք `ONLINE` տողերի քանակը `grep ONLINE relays/grid.log | wc -l` pipeline-ով և `>>`-ով ավելացրեք `bridge/control/status.log`-ի վերջից։",
+        text: "Հաշվեք `ONLINE` տողերի քանակը (`grep` և `wc -l` pipeline-ով) և `>>`-ով ավելացրեք `bridge/control/status.log`-ի վերջից։",
         hint: "grep ONLINE relays/grid.log | wc -l >> bridge/control/status.log",
         needs: [3],
         check: (c) =>
@@ -1613,12 +1613,12 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Բացեք `raw_portal` անունով symlink դեպի `deep_storage/telemetry/raw` (`ln -s deep_storage/telemetry/raw raw_portal`)։",
+        text: "Բացեք `raw_portal` անունով symlink դեպի `deep_storage/telemetry/raw`։",
         hint: "ln -s deep_storage/telemetry/raw raw_portal",
         check: (c) => typeAt(c.fs, h("refinery/raw_portal"), false) === "link" && typeAt(c.fs, h("refinery/raw_portal")) === "dir",
       },
       {
-        text: "Կառուցեք `dispatch/archive` սենյակների շղթան (`mkdir -p dispatch/archive`) և պատճենեք բոլոր `.cfg` ֆայլերը պորտալից (`cp raw_portal/*.cfg dispatch/archive/`)։",
+        text: "Կառուցեք `dispatch/archive` սենյակների շղթան և պատճենեք բոլոր `.cfg` ֆայլերը `raw_portal` պորտալից դրա ներս։",
         hint: "mkdir -p dispatch/archive && cp raw_portal/*.cfg dispatch/archive/",
         needs: [0],
         check: (c) =>
@@ -1626,7 +1626,7 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("refinery/dispatch/archive/bus_b.cfg")) === "file",
       },
       {
-        text: "Ստեղծեք hard link `deep_storage/core.dat`-ի համար `dispatch/archive/core_link.dat` անունով (`ln deep_storage/core.dat dispatch/archive/core_link.dat`)։",
+        text: "Ստեղծեք hard link `deep_storage/core.dat`-ի համար `dispatch/archive/core_link.dat` անունով։",
         hint: "ln deep_storage/core.dat dispatch/archive/core_link.dat",
         needs: [1],
         check: (c) => {
@@ -1636,7 +1636,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Ֆիլտրեք `ENERGY` տողերը `raw_portal/feed_1.log`-ից, բացառեք `ERR`-ը (`| grep -v ERR`) և `>`-ով գրեք `dispatch/clean_feed.log`-ում։",
+        text: "Ֆիլտրեք `ENERGY` տողերը `raw_portal/feed_1.log`-ից, բացառեք `ERR` պարունակող տողերը (`grep -v`) և արդյունքը `>`-ով գրեք `dispatch/clean_feed.log`-ում։",
         hint: "grep ENERGY raw_portal/feed_1.log | grep -v ERR > dispatch/clean_feed.log",
         needs: [0, 1],
         check: (c) =>
@@ -1651,7 +1651,7 @@ export const MISSIONS: Mission[] = [
           "ENERGY_OK cell-1 400W\nENERGY_OK cell-3 420W\nENERGY_OK cell-5 410W\nENERGY_OK cell-6 430W\n",
       },
       {
-        text: "Հաշվեք `dispatch/clean_feed.log`-ի տողերը pipe-ով (`cat dispatch/clean_feed.log | wc -l > dispatch/count.txt`)։",
+        text: "Հաշվեք `dispatch/clean_feed.log`-ի տողերի քանակը (`wc -l`) և արդյունքը պահեք `dispatch/count.txt` ֆայլում։",
         hint: "cat dispatch/clean_feed.log | wc -l > dispatch/count.txt",
         needs: [4],
         check: (c) => (read(c.fs, h("refinery/dispatch/count.txt")) ?? "").trim() === "4",
@@ -1725,12 +1725,12 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "ls", (e) => e.flags.includes("a") || e.flags.includes("A")),
       },
       {
-        text: "Հեռացրեք կոտրված `old_gate` պորտալը `rm old_gate` հրամանով։",
+        text: "Հեռացրեք կոտրված `old_gate` պորտալը։",
         hint: "rm old_gate",
         check: (c) => typeAt(c.fs, h("refinery/old_gate"), false) == null,
       },
       {
-        text: "Կառուցեք նոր `gate_link` պորտալ դեպի `.active_gate/conduit` (`ln -s .active_gate/conduit gate_link`)։",
+        text: "Կառուցեք նոր `gate_link` պորտալ (symlink) դեպի `.active_gate/conduit`։",
         hint: "ln -s .active_gate/conduit gate_link",
         check: (c) => typeAt(c.fs, h("refinery/gate_link"), false) === "link" && typeAt(c.fs, h("refinery/gate_link")) === "dir",
       },
@@ -1745,7 +1745,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Զտեք `NOISE`-ը և `MALWARE`-ը `gate_link/stream.log`-ից (`grep -v NOISE gate_link/stream.log | grep -v MALWARE > clean_stream.log`)։",
+        text: "Զտեք `NOISE` և `MALWARE` տողերը `gate_link/stream.log`-ից (`grep -v`) և մաքուր արդյունքը պահեք `clean_stream.log`-ում։",
         hint: "grep -v NOISE gate_link/stream.log | grep -v MALWARE > clean_stream.log",
         needs: [2],
         check: (c) =>
@@ -1753,7 +1753,7 @@ export const MISSIONS: Mission[] = [
           "SIGNAL sync-01 stable\nSIGNAL sync-02 stable\nSIGNAL sync-03 stable\n",
       },
       {
-        text: "Ստուգեք մաքուր տողերի քանակը `cat clean_stream.log | wc -l` pipeline-ով։",
+        text: "Հաշվեք `clean_stream.log`-ի մաքուր տողերի քանակը (`wc -l` pipeline-ով)։",
         hint: "cat clean_stream.log | wc -l",
         needs: [4],
         check: (c) => (c.trace?.stages.length ?? 0) > 1 && stage(c, "wc")?.out[0]?.trim() === "3",
@@ -1774,7 +1774,7 @@ export const MISSIONS: Mission[] = [
     start: h("refinery"),
     story: [
       "Զտարանի գլխավոր խողովակաշարը գրավել է Արար II-ի Բոսը՝ Հոսքակերը (The Stream Eater)։ Նա շրջապատված է հզոր Էներգետիկ Վահանով (`պաշտպանիչ վահան`), որը սնվում է `sludge_nest` բնից և կեղծ հոսքերից։",
-      "Հոսքակերի պաշտպանիչ վահանն անջատելու համար նախ սկանավորեք սենյակը (`ls -la`), ոչնչացրեք `sludge_nest` բույնը (`rm -r`), միացրեք պահեստային փականի symlink-ը (`ln -s .backup_valve/drain.cfg valve.link`) և կրկնակի `grep` pipeline-ով ուղարկեք մաքուր բանալին `shield.off` ֆայլի մեջ։ Ապա ոչնչացրեք `stream_eater.boss`-ին։",
+      "Հոսքակերի պաշտպանիչ վահանն անջատելու համար նախ սկանավորեք սենյակը (`ls -la`), ոչնչացրեք `sludge_nest` բույնը (`rm -r`), միացրեք պահեստային փականի symlink-ը (`ln -s`) և կրկնակի `grep` pipeline-ով ուղարկեք մաքուր բանալին `shield.off` ֆայլի մեջ։ Ապա ոչնչացրեք `stream_eater.boss`-ին։",
     ],
     concepts: [
       { term: "Բոսի պաշտպանիչ վահան", text: "Հոսքակերը պաշտպանված է վահանով․ նախ կատարեք բոլոր նախնական առաջադրանքները (`rm -r`, `ln -s`, `grep | grep -v >`), որպեսզի վահանն անջատվի։" },
@@ -1822,24 +1822,24 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "ls", (e) => e.flags.includes("a") || e.flags.includes("A")),
       },
       {
-        text: "Ոչնչացրեք տիղմի `sludge_nest` բույնը (`rm -r sludge_nest`)։",
+        text: "Ոչնչացրեք տիղմի `sludge_nest` բույնը։",
         hint: "rm -r sludge_nest",
         check: (c) => countNames(c.fs, (n) => n === "sludge_nest") === 0,
       },
       {
-        text: "Միացրեք դրենաժային փականը․ ստեղծեք `valve.link` անունով symlink դեպի `.backup_valve/drain.cfg` (`ln -s .backup_valve/drain.cfg valve.link`)։",
+        text: "Միացրեք դրենաժային փականը․ ստեղծեք `valve.link` անունով symlink դեպի `.backup_valve/drain.cfg`։",
         hint: "ln -s .backup_valve/drain.cfg valve.link",
         check: (c) =>
           typeAt(c.fs, h("refinery/valve.link"), false) === "link" &&
           (read(c.fs, h("refinery/valve.link")) ?? "").includes("VALVE_STATE=OPEN"),
       },
       {
-        text: "Անջատեք Հոսքակերի պաշտպանիչ վահանը․ ֆիլտրեք `KEY_FRAGMENT` տողերը `flood.log`-ից, pipe (`|`) արեք `grep -v ERR`-ի մեջ և `>`-ով գրեք `shield.off`-ում։",
+        text: "Անջատեք Հոսքակերի պաշտպանիչ վահանը․ ֆիլտրեք `KEY_FRAGMENT` տողերը `flood.log`-ից, բացառեք `ERR` պարունակող տողերը (`grep -v`) և մաքուր արդյունքը `>`-ով պահեք `shield.off` ֆայլում։",
         hint: "grep KEY_FRAGMENT flood.log | grep -v ERR > shield.off",
         check: (c) => (read(c.fs, h("refinery/shield.off")) ?? "").trim() === "KEY_FRAGMENT=SHIELD-DOWN-88-OK",
       },
       {
-        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Արար II-ի Բոսին՝ `rm stream_eater.boss`։",
+        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Արար II-ի Բոսին՝ `stream_eater.boss`-ին։",
         hint: "rm stream_eater.boss",
         needs: [0, 1, 2, 3],
         check: (c) => countNames(c.fs, (n) => n === "stream_eater.boss") === 0,
@@ -1920,7 +1920,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք կրկնօրինակումներ առաջացնող `dup.glitch` խափանումը (`rm dup.glitch`)։",
+        text: "Ոչնչացրեք կրկնօրինակումներ առաջացնող `dup.glitch` խափանումը։",
         hint: "rm dup.glitch",
         check: (c) => countNames(c.fs, (n) => n === "dup.glitch") === 0,
       },
@@ -1980,7 +1980,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք ռեզերվուարը թունավորող `corrupt_nest` բույնը (`rm -r corrupt_nest`)։",
+        text: "Ոչնչացրեք ռեզերվուարը թունավորող `corrupt_nest` բույնը։",
         hint: "rm -r corrupt_nest",
         check: (c) => countNames(c.fs, (n) => n === "corrupt_nest") === 0,
       },
@@ -2006,7 +2006,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "wc", (e) => (e.out[0] ?? "").trim().startsWith("7")) && same(tankLines(c).sort(), CLEAN_ALL),
       },
       {
-        text: "Ստեղծեք `backup` սենյակը (`mkdir -p backup`) և պատճենեք մաքուր `engine.tank`-ը դրա ներս (`cp engine.tank backup/`)։",
+        text: "Ստեղծեք `backup` սենյակը և պատճենեք մաքուր `engine.tank`-ը դրա ներս։",
         hint: "mkdir -p backup && cp engine.tank backup/",
         needs: [3],
         check: (c) =>
@@ -2079,7 +2079,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք ժամանակաչափը խախտող `chrono.glitch` խափանումը (`rm chrono.glitch`)։",
+        text: "Ոչնչացրեք ժամանակաչափը խախտող `chrono.glitch` խափանումը։",
         hint: "rm chrono.glitch",
         check: (c) => countNames(c.fs, (n) => n === "chrono.glitch") === 0,
       },
@@ -2094,7 +2094,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "tail", (e) => e.out.length === 1 && e.out[0].includes("FINAL_LOCK=991")),
       },
       {
-        text: "Քաղեք ուղիղ 3-րդ տողը (`SECRET_SYNC=774`)՝ pipe անելով `head -n 3 chrono.log`-ը `tail -n 1`-ի մեջ։",
+        text: "Քաղեք ուղիղ 3-րդ տողը (`SECRET_SYNC=774`)՝ համադրելով `head` և `tail` հրամանները pipe-ով։",
         hint: "head -n 3 chrono.log | tail -n 1",
         check: (c) => (c.trace?.stages.length ?? 0) > 1 && !!stage(c, "tail")?.out[0]?.includes("SECRET_SYNC=774"),
       },
@@ -2159,7 +2159,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ստուգեք գումարումը․ `echo $((120 + 80))` հրամանով տպեք լարումը էկրանին։",
+        text: "Ստուգեք գումարումը․ shell-ի թվաբանությամբ (`$((...))`) հաշվեք և տպեք `120 + 80` լարումը էկրանին։",
         hint: "echo $((120 + 80))",
         check: (c) => ran(c, "echo", (e) => e.out[0]?.trim() === "200"),
       },
@@ -2174,7 +2174,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => (read(c.fs, h("refinery/mod.cal")) ?? "").trim() === "2",
       },
       {
-        text: "Հաշվեք ընդհանուր գործակիցը՝ `$(((200 + 90) / 10))` և պահեք `total.cal` file-ի մեջ։",
+        text: "Հաշվեք ընդհանուր գործակիցը՝ `(200 + 90) / 10`, և պահեք արդյունքը `total.cal` file-ի մեջ։",
         hint: "echo $(((200 + 90) / 10)) > total.cal",
         check: (c) => (read(c.fs, h("refinery/total.cal")) ?? "").trim() === "29",
       },
@@ -2252,18 +2252,18 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `analytics/reports` սենյակների շղթան (`mkdir -p analytics/reports`)։",
+        text: "Կառուցեք `analytics/reports` սենյակների շղթան։",
         hint: "mkdir -p analytics/reports",
         check: (c) => typeAt(c.fs, h("refinery/analytics/reports")) === "dir",
       },
       {
-        text: "Ստեղծեք `latest_reports` symlink պորտալը դեպի `analytics/reports` (`ln -s analytics/reports latest_reports`)։",
+        text: "Ստեղծեք `latest_reports` symlink պորտալը դեպի `analytics/reports`։",
         hint: "ln -s analytics/reports latest_reports",
         needs: [0],
         check: (c) => typeAt(c.fs, h("refinery/latest_reports"), false) === "link" && typeAt(c.fs, h("refinery/latest_reports")) === "dir",
       },
       {
-        text: "Ֆիլտրեք `WARN` տողերը `cluster.log`-ից, անցկացրեք `sort | uniq | head -n 3`-ով և `>`-ով գրեք `latest_reports/top_warn.log`-ում։",
+        text: "Ֆիլտրեք `WARN` տողերը `cluster.log`-ից, դասավորեք, հեռացրեք կրկնվող տողերը (`sort` և `uniq`), վերցրեք միայն առաջին 3 տողերը (`head`) և արդյունքը `>`-ով պահեք `latest_reports/top_warn.log`-ում։",
         hint: "grep WARN cluster.log | sort | uniq | head -n 3 > latest_reports/top_warn.log",
         needs: [1],
         check: (c) =>
@@ -2272,12 +2272,12 @@ export const MISSIONS: Mission[] = [
           ),
       },
       {
-        text: "Գտեք `calibration.dat`-ի 4-րդ տողը `head -n 4 calibration.dat | tail -n 1` հրամանով (տեսեք `14 * 5` բանաձևը)։",
+        text: "Գտեք և տպեք `calibration.dat`-ի ուղիղ 4-րդ տողը (`head` և `tail` pipeline-ով)՝ բանաձևը տեսնելու համար։",
         hint: "head -n 4 calibration.dat | tail -n 1",
         check: (c) => (c.trace?.stages.length ?? 0) > 1 && !!stage(c, "tail")?.out[0]?.includes("14 * 5"),
       },
       {
-        text: "Հաշվեք `14 * 5` արտադրյալը `$((14 * 5))`-ով և `>>`-ով ավելացրեք `latest_reports/top_warn.log`-ի վերջից։",
+        text: "Հաշվեք 4-րդ տողում գտնված բանաձևի արժեքը (`$((...))`) և `>>`-ով ավելացրեք `latest_reports/top_warn.log`-ի վերջից։",
         hint: "echo $((14 * 5)) >> latest_reports/top_warn.log",
         needs: [2],
         check: (c) =>
@@ -2354,7 +2354,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `audit/results` պահոցը (`mkdir -p audit/results`) և ստեղծեք hard link `streams/east.log`-ի համար `audit/east.hard` անունով։",
+        text: "Կառուցեք `audit/results` պահոցը և ստեղծեք hard link `streams/east.log`-ի համար `audit/east.hard` անունով։",
         hint: "mkdir -p audit/results && ln streams/east.log audit/east.hard",
         check: (c) => {
           const a = idAt(c.fs, h("refinery/streams/east.log"), false);
@@ -2371,7 +2371,7 @@ export const MISSIONS: Mission[] = [
           "EVENT valve jam\nEVENT link drop\nEVENT valve jam\nEVENT valve jam\nEVENT temp high\nEVENT link drop\n",
       },
       {
-        text: "Հաշվեք հաճախականությունները `sort audit/merged.log | uniq -c | sort -rn > audit/results/freq.txt` pipeline-ով։",
+        text: "Դասավորեք `audit/merged.log`-ի տողերը, հաշվեք յուրաքանչյուրի հաճախականությունը (`uniq -c`), դասավորեք նվազման թվային կարգով (`sort -rn`) և արդյունքը պահեք `audit/results/freq.txt`-ում։",
         hint: "sort audit/merged.log | uniq -c | sort -rn > audit/results/freq.txt",
         needs: [1],
         check: (c) => {
@@ -2380,7 +2380,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Վերցրեք ամենահաճախ տողը (`head -n 1 audit/results/freq.txt > audit/results/top.txt`) և ստուգեք `streams/params.dat`-ի 2-րդ տողի բանաձևը (`head -n 2 streams/params.dat | tail -n 1`)։",
+        text: "Պահեք `audit/results/freq.txt`-ի ամենաառաջին տողը `audit/results/top.txt` ֆայլում և կարդացեք `streams/params.dat`-ի ուղիղ 2-րդ տողի բանաձևը (`head` և `tail` pipeline-ով)։",
         hint: "head -n 1 audit/results/freq.txt > audit/results/top.txt && head -n 2 streams/params.dat | tail -n 1",
         needs: [2],
         check: (c) =>
@@ -2388,7 +2388,7 @@ export const MISSIONS: Mission[] = [
           ran(c, "tail", (e) => e.out.some((l) => l.includes("18 * 6 + 12"))),
       },
       {
-        text: "Հաշվեք `18 * 6 + 12` արտահայտությունը `$((...))`-ով և `>>`-ով ավելացրեք `audit/results/top.txt`-ի վերջից։",
+        text: "Հաշվեք 2-րդ տողի բանաձևը (`$((...))`) և արդյունքը `>>`-ով ավելացրեք `audit/results/top.txt`-ի վերջից։",
         hint: "echo $((18 * 6 + 12)) >> audit/results/top.txt",
         needs: [3],
         check: (c) => {
@@ -2411,7 +2411,7 @@ export const MISSIONS: Mission[] = [
     start: h("refinery"),
     story: [
       "Անվերջ Ցիկլի արտաքին պահոցից առաջ հավաքվել են չմշակված `.raw` ֆայլեր։ Մենք պետք է կազմակերպենք դրանք, բացենք արագ պորտալ, մաքրենք աղմուկը, ընտրենք վերջին 2 կայուն իմպուլսները և հավասարակշռենք շարժիչը։",
-      "Տեղափոխեք բոլոր `*.raw` ֆայլերը `staging/logs/` (`mkdir -p` և `mv`), ստեղծեք `latest_log` symlink, մաքրեք `NOISE` ու `DROP` տողերը, դասավորեք (`sort | uniq`), պահեք վերջին 2 տողերը (`tail -n 2`) և ավելացրեք `$(((240 - 45) / 5))` հաշվարկը։",
+      "Տեղափոխեք բոլոր `*.raw` ֆայլերը `staging/logs/` (`mkdir -p` և `mv`), ստեղծեք `latest_log` symlink, մաքրեք `NOISE` ու `DROP` տողերը, դասավորեք (`sort | uniq`), պահեք վերջին 2 տողերը (`tail`) և ավելացրեք թվաբանական հաշվարկը (`$((...))`)։",
     ],
     concepts: [
       { term: "Կազմակերպում + Զտում", text: "Նախ տեղափոխեք հում ֆայլերը կառուցված սենյակ, ապա symlink-ի միջոցով մշակեք դրանք pipeline-ով։" },
@@ -2461,7 +2461,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `staging/logs` սենյակը (`mkdir -p staging/logs`) և տեղափոխեք բոլոր `*.raw` ֆայլերը դրա ներս (`mv *.raw staging/logs/`)։",
+        text: "Կառուցեք `staging/logs` սենյակը և տեղափոխեք բոլոր `.raw` ֆայլերը դրա ներս (wildcard-ով)։",
         hint: "mkdir -p staging/logs && mv *.raw staging/logs/",
         check: (c) =>
           typeAt(c.fs, h("refinery/staging/logs/turbine.raw")) === "file" &&
@@ -2469,13 +2469,13 @@ export const MISSIONS: Mission[] = [
           !names(c.fs, h("refinery")).some((n) => n.endsWith(".raw")),
       },
       {
-        text: "Ստեղծեք `latest_log` անունով symlink, որը ցույց է տալիս `staging/logs/turbine.raw`-ի վրա (`ln -s staging/logs/turbine.raw latest_log`)։",
+        text: "Ստեղծեք `latest_log` անունով symlink, որը ցույց է տալիս `staging/logs/turbine.raw`-ի վրա։",
         hint: "ln -s staging/logs/turbine.raw latest_log",
         needs: [0],
         check: (c) => typeAt(c.fs, h("refinery/latest_log"), false) === "link" && typeAt(c.fs, h("refinery/latest_log")) === "file",
       },
       {
-        text: "Զտեք `NOISE` և `DROP` տողերը `latest_log`-ից, դասավորեք ու մաքրեք կրկնությունները (`grep -v NOISE latest_log | grep -v DROP | sort | uniq > staging/clean_pulses.txt`)։",
+        text: "Հեռացրեք `NOISE` և `DROP` տողերը `latest_log`-ից (`grep -v`), դասավորեք, մաքրեք կրկնվող տողերը (`sort` և `uniq`) և պահեք `staging/clean_pulses.txt`-ում։",
         hint: "grep -v NOISE latest_log | grep -v DROP | sort | uniq > staging/clean_pulses.txt",
         needs: [1],
         check: (c) =>
@@ -2483,7 +2483,7 @@ export const MISSIONS: Mission[] = [
           "PULSE-120 OK\nPULSE-210 OK\nPULSE-340 OK\nPULSE-450 OK\n",
       },
       {
-        text: "Հաշվեք մաքուր իմպուլսները (`cat staging/clean_pulses.txt | wc -l`) և պահեք վերջին 2-ը `staging/final_pair.txt`-ում (`tail -n 2 staging/clean_pulses.txt > staging/final_pair.txt`)։",
+        text: "Հաշվեք `staging/clean_pulses.txt`-ի տողերը (`wc -l`) և դրա վերջին 2 տողերը (`tail`) պահեք `staging/final_pair.txt`-ում։",
         hint: "cat staging/clean_pulses.txt | wc -l && tail -n 2 staging/clean_pulses.txt > staging/final_pair.txt",
         needs: [2],
         check: (c) =>
@@ -2491,7 +2491,7 @@ export const MISSIONS: Mission[] = [
           ran(c, "wc"),
       },
       {
-        text: "Հաշվեք `(240 - 45) / 5` արդյունքը `$(((240 - 45) / 5))`-ով և `>>`-ով ավելացրեք `staging/final_pair.txt`-ի վերջից։",
+        text: "Հաշվեք `(240 - 45) / 5` արտահայտությունը (`$((...))`) և արդյունքը `>>`-ով ավելացրեք `staging/final_pair.txt`-ի վերջից։",
         hint: "echo $(((240 - 45) / 5)) >> staging/final_pair.txt",
         needs: [3],
         check: (c) =>
@@ -2513,7 +2513,7 @@ export const MISSIONS: Mission[] = [
     start: h("refinery"),
     story: [
       "Զտարանի ժամանակային միջուկը գերեվարել է Արար III-ի Բոսը՝ Անվերջ Ցիկլը (The Infinite Loop)։ Նրան շրջապատում է ժամանակային Էներգետիկ Վահանը (`պաշտպանիչ վահան`), որը սնվում է `loop_nest` բնից և կրկնվող ցիկլերից։",
-      "Անվերջ Ցիկլի պաշտպանիչ վահանն անջատելու համար նախ ոչնչացրեք `loop_nest` բույնը (`rm -r`), մաքրեք `ITER_OK` տողերը `loop.log`-ից դեպի `stable.log` (`grep ITER_OK loop.log | sort | uniq > stable.log`), ապա հանեք առաջին և վերջին տողերի թվերը (`head -n 1` և `tail -n 1`), բազմապատկեք դրանք `$((35 * 8))`-ով `halt.key`-ի մեջ և ոչնչացրեք `infinite_loop.boss`-ին։",
+      "Անվերջ Ցիկլի պաշտպանիչ վահանն անջատելու համար նախ ոչնչացրեք `loop_nest` բույնը (`rm -r`), մաքրեք `ITER_OK` տողերը `loop.log`-ից դեպի `stable.log` (`grep`, `sort`, `uniq`), ապա հանեք առաջին և վերջին տողերի թվերը (`head`, `tail`), բազմապատկեք դրանք `$((...))`-ով `halt.key`-ի մեջ և ոչնչացրեք `infinite_loop.boss`-ին։",
     ],
     concepts: [
       { term: "Բոսի պաշտպանիչ վահան", text: "Անվերջ Ցիկլի վահանն անջատվում է միայն բոլոր նախնական առաջադրանքները (բույնի մաքրում, լոգի զտում և արգելակման բանալու հաշվարկ) կատարելուց հետո։" },
@@ -2560,30 +2560,30 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք ցիկլը սնուցող `loop_nest` բույնը (`rm -r loop_nest`)։",
+        text: "Ոչնչացրեք ցիկլը սնուցող `loop_nest` բույնը։",
         hint: "rm -r loop_nest",
         check: (c) => countNames(c.fs, (n) => n === "loop_nest") === 0,
       },
       {
-        text: "Ֆիլտրեք `ITER_OK` տողերը `loop.log`-ից, դասավորեք ու մաքրեք կրկնությունները (`sort | uniq`) և պահեք `stable.log`-ում։",
+        text: "Զտեք միայն `ITER_OK` տողերը `loop.log`-ից, դասավորեք, հեռացրեք կրկնվող տողերը (`sort` և `uniq`) և արդյունքը պահեք `stable.log` ֆայլում։",
         hint: "grep ITER_OK loop.log | sort | uniq > stable.log",
         check: (c) =>
           read(c.fs, h("refinery/stable.log")) === "ITER_OK cycle-1 stabilized\nITER_OK cycle-2 stabilized\n",
       },
       {
-        text: "Կարդացեք `loop.log`-ի առաջին տողը (`head -n 1 loop.log` -> `35`) և վերջին տողը (`tail -n 1 loop.log` -> `8`)։",
+        text: "Կարդացեք `loop.log`-ի առաջին տողը (`head`) և վերջին տողը (`tail`)՝ երկու թվերը պարզելու համար։",
         hint: "head -n 1 loop.log && tail -n 1 loop.log",
         check: (c) =>
           ran(c, "head", (e) => e.out.some((l) => l.includes("ALPHA_SEED=35"))) ||
           ran(c, "tail", (e) => e.out.some((l) => l.includes("OMEGA_MULT=8"))),
       },
       {
-        text: "Անջատեք Անվերջ Ցիկլի պաշտպանիչ վահանը․ հաշվեք `35 * 8` արտադրյալը `$((...))`-ով և `>`-ով գրեք `halt.key`-ի մեջ։",
+        text: "Անջատեք Անվերջ Ցիկլի պաշտպանիչ վահանը․ բազմապատկեք առաջին և վերջին տողերի թվերը (`$((...))`) և արդյունքը `>`-ով պահեք `halt.key` ֆայլում։",
         hint: "echo $((35 * 8)) > halt.key",
         check: (c) => (read(c.fs, h("refinery/halt.key")) ?? "").trim() === "280",
       },
       {
-        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Արար III-ի Բոսին՝ `rm infinite_loop.boss`։",
+        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Արար III-ի Բոսին՝ `infinite_loop.boss`-ին։",
         hint: "rm infinite_loop.boss",
         needs: [0, 1, 2, 3],
         check: (c) => countNames(c.fs, (n) => n === "infinite_loop.boss") === 0,
@@ -2656,7 +2656,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "ls"),
       },
       {
-        text: "Ոչնչացրեք `phantom_1.glitch` խափանումը (`rm phantom_1.glitch` կամ `rm phantom_?.glitch`)։",
+        text: "Ոչնչացրեք `phantom_1.glitch` խափանումը։",
         hint: "rm phantom_?.glitch",
         check: (c) => countNames(c.fs, (n) => n === "phantom_1.glitch") === 0,
       },
@@ -2735,7 +2735,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք `shadow_nest` խափանումների բույնը (`rm -r shadow_nest`)։",
+        text: "Ոչնչացրեք `shadow_nest` խափանումների բույնը։",
         hint: "rm -r shadow_nest",
         check: (c) => countNames(c.fs, (n) => n === "shadow_nest") === 0,
       },
@@ -2750,12 +2750,12 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "cat", (e) => e.out.some((l) => l.includes("CELL-CORE-ONLINE-550"))),
       },
       {
-        text: "Պատճենեք այդ գաղտնի file-ը `active.dat`-ի մեջ՝ օգտագործելով `cp $(cat pointer.txt) active.dat`։",
+        text: "Պատճենեք այդ գաղտնի file-ը `active.dat`-ի մեջ՝ օգտագործելով command substitution (`$(...)`) `pointer.txt`-ի միջոցով։",
         hint: "cp $(cat pointer.txt) active.dat",
         check: (c) => read(c.fs, h("grid/active.dat")) === "CELL-CORE-ONLINE-550\n",
       },
       {
-        text: "Գրեք `target.log`-ի տողերի քանակը `report.txt`-ում՝ `echo \"Count: $(wc -l target.log)\" > report.txt` հրամանով։",
+        text: "Գրեք `target.log`-ի տողերի քանակը `report.txt`-ում՝ `Count: <թիվ>` ձևաչափով (օգտագործելով `$(...)` և `wc -l`)։",
         hint: 'echo "Count: $(wc -l target.log)" > report.txt',
         check: (c) => /^Count:\s*5\b/.test((read(c.fs, h("grid/report.txt")) ?? "").trim()),
       },
@@ -2774,7 +2774,7 @@ export const MISSIONS: Mission[] = [
     start: h("grid"),
     story: [
       "Ցանցի այս հատվածում Ուրվականը խառնել է բեկորները և թողել է բազմակի գրանցումներով քարտեզ (`grid_map.log`)։ Նախքան ավելի խորը մտնելը պետք է հավաքել ճշգրիտ բեկորները։",
-      "Կիրառեք նախորդ Արարների և Արար IV-ի գործիքները․ կառուցեք `vault/clean` պահոցը (`mkdir -p`), տեղափոխեք միայն 1–3 համարների բեկորները (`mv shard_[123].dat`), pipeline-ով գտեք թաքնված ֆայլի անունը, `cp $(cat ...)`-ով պատճենեք այն պահոց և բացեք `clean_portal` symlink-ը։",
+      "Կիրառեք նախորդ Արարների և Արար IV-ի գործիքները․ կառուցեք `vault/clean` պահոցը (`mkdir -p`), տեղափոխեք միայն 1–3 համարների բեկորները (`mv` և `[123]` դիմակ), pipeline-ով գտեք թաքնված ֆայլի անունը, `$(...)` միջոցով պատճենեք այն պահոց և բացեք `clean_portal` symlink-ը։",
     ],
     concepts: [
       { term: "Glob + Move", text: "`mv item_[123].dat dir/` հրամանը տեղափոխում է միայն 1, 2, 3 համարներով ֆայլերը՝ թողնելով `item_9.dat`-ը։" },
@@ -2828,12 +2828,12 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `vault/clean` պահոցը (`mkdir -p vault/clean`)։",
+        text: "Կառուցեք `vault/clean` պահոցը։",
         hint: "mkdir -p vault/clean",
         check: (c) => typeAt(c.fs, h("grid/vault/clean")) === "dir",
       },
       {
-        text: "Տեղափոխեք (`mv`) միայն `shard_1.dat`, `shard_2.dat`, `shard_3.dat` ֆայլերը դեպի `vault/clean/`՝ օգտագործելով `shard_[123].dat` դիմակը (առանց `shard_9.dat`-ի)։",
+        text: "Տեղափոխեք (`mv`) միայն `shard_1.dat`, `shard_2.dat`, `shard_3.dat` ֆայլերը դեպի `vault/clean/`՝ օգտագործելով `[...]` դիմակ (առանց `shard_9.dat`-ի)։",
         hint: "mv shard_[123].dat vault/clean/",
         needs: [0],
         check: (c) =>
@@ -2841,18 +2841,18 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("grid/shard_9.dat")) === "file",
       },
       {
-        text: "Ֆիլտրեք `.cfg` տողերը `grid_map.log`-ից, անցկացրեք `sort | uniq | tail -n 1`-ով և `>`-ով պահեք `target_name.txt`-ում։",
+        text: "Ֆիլտրեք `.cfg` տողերը `grid_map.log`-ից, դասավորեք, հեռացրեք կրկնությունները (`sort` և `uniq`), վերցրեք վերջին տողը (`tail`) և `>`-ով պահեք `target_name.txt`-ում։",
         hint: "grep .cfg grid_map.log | sort | uniq | tail -n 1 > target_name.txt",
         check: (c) => (read(c.fs, h("grid/target_name.txt")) ?? "").trim() === "omega_core.cfg",
       },
       {
-        text: "Օգտագործեք `$(cat target_name.txt)`՝ այդ ֆայլը `vault/clean/core.bak` անունով պատճենելու համար (`cp $(cat target_name.txt) vault/clean/core.bak`)։",
+        text: "Օգտագործեք command substitution (`$(...)`)՝ `target_name.txt`-ում գրված ֆայլը պատճենելու համար `vault/clean/core.bak` անունով։",
         hint: "cp $(cat target_name.txt) vault/clean/core.bak",
         needs: [0, 2],
         check: (c) => read(c.fs, h("grid/vault/clean/core.bak")) === "OMEGA-CORE-VERIFIED-777\n",
       },
       {
-        text: "Բացեք `clean_portal` անունով symlink դեպի `vault/clean` (`ln -s vault/clean clean_portal`)։",
+        text: "Բացեք `clean_portal` անունով symlink դեպի `vault/clean`։",
         hint: "ln -s vault/clean clean_portal",
         needs: [0],
         check: (c) => typeAt(c.fs, h("grid/clean_portal"), false) === "link" && typeAt(c.fs, h("grid/clean_portal")) === "dir",
@@ -2872,7 +2872,7 @@ export const MISSIONS: Mission[] = [
     start: h("grid"),
     story: [
       "Ցանցի խորքում սենսորների տվյալները բաժանված են մասերի, և պետք է միավորել միայն վավեր թվային ռելեների հոսքերը՝ չդիպչելով կեղծ `relay_ab.log`-ին։",
-      "Ստեղծեք symlink պորտալ դեպի հեռավոր սենսորները (`ln -s`), պատճենեք միայն թվային սենսորները `relay_[0-9].log` դիմակով, ֆիլտրեք աղմուկը `grep -v`-ով (`>` և `>>`) և ավելացրեք հաշվարկված կոդը զեկույցի մեջ։",
+      "Ստեղծեք symlink պորտալ դեպի հեռավոր սենսորները (`ln -s`), պատճենեք միայն թվային սենսորները `[0-9]` դիմակով, ֆիլտրեք աղմուկը `grep -v`-ով (`>` և `>>`) և ավելացրեք հաշվարկված կոդը զեկույցի մեջ։",
     ],
     concepts: [
       { term: "ln -s + Glob", text: "Symbolic link-ով կարճացրեք երկար path-ը և կիրառեք `[0-9]` դիմակը հենց պորտալի միջով։" },
@@ -2921,12 +2921,12 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ստեղծեք `sensors_link` անունով symbolic link դեպի `deep_sector/sensors` (`ln -s deep_sector/sensors sensors_link`)։",
+        text: "Ստեղծեք `sensors_link` անունով symbolic link դեպի `deep_sector/sensors`։",
         hint: "ln -s deep_sector/sensors sensors_link",
         check: (c) => typeAt(c.fs, h("grid/sensors_link"), false) === "link" && typeAt(c.fs, h("grid/sensors_link")) === "dir",
       },
       {
-        text: "Պատճենեք (`cp`) միայն մեկ թվանշան ունեցող `sensors_link/relay_[0-9].log` ֆայլերը դեպի `active/` (առանց `relay_ab.log`-ի)։",
+        text: "Պատճենեք (`cp`) `sensors_link/`-ից միայն մեկ թվանշան ունեցող `relay` լոգերը դեպի `active/` (օգտագործելով `[0-9]` դիմակը, առանց `relay_ab.log`-ի)։",
         hint: "cp sensors_link/relay_[0-9].log active/",
         needs: [0],
         check: (c) =>
@@ -2942,7 +2942,7 @@ export const MISSIONS: Mission[] = [
           read(c.fs, h("grid/active/merged.log")) === "PULSE 100 OK\nPULSE 200 OK\nPULSE 300 OK\nPULSE 400 OK\n",
       },
       {
-        text: "Հաշվեք մաքուր տողերի քանակը `cat active/merged.log | wc -l`-ով և ավելացրեք `4 * 25` արժեքը `echo $((4 * 25)) >> active/merged.log` հրամանով։",
+        text: "Հաշվեք `active/merged.log`-ի մաքուր տողերի քանակը (`wc -l` pipeline-ով) և ավելացրեք (`>>`) `4 * 25` արժեքը (`$((...))`) `active/merged.log`-ի վերջից։",
         hint: "cat active/merged.log | wc -l && echo $((4 * 25)) >> active/merged.log",
         needs: [2],
         check: (c) =>
@@ -2963,7 +2963,7 @@ export const MISSIONS: Mission[] = [
     start: h("grid"),
     story: [
       "Ուայլդքարդ Ուրվականի գլխավոր որջից առաջ պետք է փակել պաշտպանական պարագիծը․ տեղափոխել միայն ճիշտ հանգույցները (`node_a1.dat`, `node_a2.dat`, `node_b1.dat`), գտնել գաղտնի բանալու ուղին `manifest.idx`-ից և միացնել բազմաֆայլ տելեմետրիան։",
-      "Կառուցեք `perimeter/locked` պահոցը (`mkdir -p`), տեղափոխեք հանգույցները համակցված դիմակով (`mv node_[ab][12].dat`), pipeline-ով գտեք բանալու անունը, hard link արեք `$(cat ...)`-ով, զտեք `telemetry_[0-9].log`-երը և ավելացրեք `$((32 * 3))` հաշվարկը։",
+      "Կառուցեք `perimeter/locked` պահոցը (`mkdir -p`), տեղափոխեք հանգույցները համակցված `[...]` դիմակով (`mv`), pipeline-ով գտեք բանալու անունը, hard link արեք `$(...)`-ով, զտեք միայն թվային `telemetry` լոգերը և ավելացրեք թվաբանական հաշվարկը (`$((...))`)։",
     ],
     concepts: [
       { term: "Համակցված Դիմակներ", text: "`node_[ab][12].dat` նշանակում է՝ առաջին նիշը `a` կամ `b`, երկրորդը՝ `1` կամ `2`։ Այն չի դիպչի `node_x9.dat`-ին կամ `node_zz.dat`-ին։" },
@@ -3023,12 +3023,12 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `perimeter/locked` պահոցը (`mkdir -p perimeter/locked`)։",
+        text: "Կառուցեք `perimeter/locked` պահոցը։",
         hint: "mkdir -p perimeter/locked",
         check: (c) => typeAt(c.fs, h("grid/perimeter/locked")) === "dir",
       },
       {
-        text: "Տեղափոխեք միայն `node_a1.dat`, `node_a2.dat`, `node_b1.dat` ֆայլերը `perimeter/locked/`՝ օգտագործելով `mv node_[ab][12].dat perimeter/locked/` (չդիպչելով `node_x9.dat` և `node_zz.dat`)։",
+        text: "Տեղափոխեք միայն `node_a1.dat`, `node_a2.dat`, `node_b1.dat` ֆայլերը `perimeter/locked/`՝ օգտագործելով համակցված `[...]` դիմակ (չդիպչելով `node_x9.dat` և `node_zz.dat`)։",
         hint: "mv node_[ab][12].dat perimeter/locked/",
         needs: [0],
         check: (c) =>
@@ -3037,12 +3037,12 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("grid/node_zz.dat")) === "file",
       },
       {
-        text: "Ֆիլտրեք `.key` տողերը `manifest.idx`-ից, դասավորեք ու վերցրեք առաջինը (`grep .key manifest.idx | sort | uniq | head -n 1 > key_path.txt`)։",
+        text: "Ֆիլտրեք `.key` տողերը `manifest.idx`-ից, դասավորեք, հեռացրեք կրկնությունները (`sort` և `uniq`), վերցրեք առաջինը (`head`) և արդյունքը `>`-ով պահեք `key_path.txt`-ում։",
         hint: "grep .key manifest.idx | sort | uniq | head -n 1 > key_path.txt",
         check: (c) => (read(c.fs, h("grid/key_path.txt")) ?? "").trim() === "alpha_seed.key",
       },
       {
-        text: "Ստեղծեք hard link `$(cat key_path.txt)`-ի վրա `perimeter/locked/anchor.key` անունով (`ln $(cat key_path.txt) perimeter/locked/anchor.key`)։",
+        text: "Ստեղծեք hard link `key_path.txt`-ում գրված ֆայլի վրա (`$(...)`) `perimeter/locked/anchor.key` անունով։",
         hint: "ln $(cat key_path.txt) perimeter/locked/anchor.key",
         needs: [0, 2],
         check: (c) => {
@@ -3052,7 +3052,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Միավորեք թվային լոգերը `cat telemetry_[0-9].log | grep OK | sort | uniq > perimeter/clean_ok.log` խողովակաշարով և ավելացրեք `32 * 3` արժեքը `echo $((32 * 3)) >> perimeter/clean_ok.log` հրամանով։",
+        text: "Միավորեք միայն թվային `telemetry` լոգերը (`[0-9]` դիմակով), զտեք `OK` տողերը, դասավորեք ու մաքրեք կրկնությունները դեպի `perimeter/clean_ok.log`, ապա `>>`-ով ավելացրեք `32 * 3` հաշվարկի արժեքը (`$((...))`)։",
         hint: "cat telemetry_[0-9].log | grep OK | sort | uniq > perimeter/clean_ok.log && echo $((32 * 3)) >> perimeter/clean_ok.log",
         needs: [0],
         check: (c) =>
@@ -3074,7 +3074,7 @@ export const MISSIONS: Mission[] = [
     start: h("grid"),
     story: [
       "Արար IV-ի Բոսը՝ Ուայլդքարդ Ուրվականը (The Wildcard Phantom), պաշտպանված է Իլյուզիոն Էներգետիկ Վահանով (`պաշտպանիչ վահան`), շրջապատված է `phantom_nest` բնով և կեղծ կլոններով (`clone_1.tmp`, `clone_2.tmp`, `clone_3.tmp`), իսկ կողքին դրված է կենսական նշանակության `core_1.sys` համակարգային ֆայլը։",
-      "Եթե օգտագործեք անզգույշ `rm *1*`, կոչնչացնեք համակարգի միջուկը։ Նախ պահուստավորեք `core_1.sys`-ը `backup/` սենյակում (`mkdir -p` և `cp`), ոչնչացրեք `phantom_nest` բույնը (`rm -r`), մաքրեք կլոնները ճշգրիտ `clone_[0-9].tmp` դիմակով և `.oracle.log`-ի 2-րդ տողից հանեք Բոսի իրական անունը `true_name.txt`-ի մեջ (`head -n 2 .oracle.log | tail -n 1 > true_name.txt`)՝ վահանն անջատելու համար։ Ապա հարվածեք `rm $(cat true_name.txt)`-ով։",
+      "Եթե օգտագործեք անզգույշ `rm *1*`, կոչնչացնեք համակարգի միջուկը։ Նախ պահուստավորեք `core_1.sys`-ը `backup/` սենյակում (`mkdir -p` և `cp`), ոչնչացրեք `phantom_nest` բույնը (`rm -r`), մաքրեք կլոնները ճշգրիտ `[0-9]` դիմակով և `.oracle.log`-ի 2-րդ տողից հանեք Բոսի իրական անունը `true_name.txt`-ի մեջ (`head` և `tail`)՝ վահանն անջատելու համար։ Ապա հարվածեք `$(...)` միջոցով։",
     ],
     concepts: [
       { term: "Բոսի պաշտպանիչ վահան", text: "Ուայլդքարդ Ուրվականի վահանն անջատվում է միայն բոլոր նախնական առաջադրանքները կատարելուց հետո։" },
@@ -3117,28 +3117,28 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Սկանավորեք սենյակը `ls -la`-ով, ստեղծեք `backup` սենյակը (`mkdir -p backup`) և պատճենեք `core_1.sys`-ը դրա ներս (`cp core_1.sys backup/`)։",
+        text: "Սկանավորեք սենյակը `ls -la`-ով, ստեղծեք `backup` սենյակը և պատճենեք `core_1.sys`-ը դրա ներս։",
         hint: "ls -la && mkdir -p backup && cp core_1.sys backup/",
         check: (c) =>
           read(c.fs, h("grid/backup/core_1.sys")) === "CRITICAL SYSTEM KERNEL - DO NOT DELETE\n",
       },
       {
-        text: "Ոչնչացրեք Ուրվականի `phantom_nest` բույնը (`rm -r phantom_nest`)։",
+        text: "Ոչնչացրեք Ուրվականի `phantom_nest` բույնը։",
         hint: "rm -r phantom_nest",
         check: (c) => countNames(c.fs, (n) => n === "phantom_nest") === 0,
       },
       {
-        text: "Մաքրեք միայն կեղծ կլոնները (`clone_1.tmp`, `clone_2.tmp`, `clone_3.tmp`)՝ օգտագործելով `rm clone_[0-9].tmp`։",
+        text: "Մաքրեք միայն կեղծ կլոնները (`clone_1.tmp`, `clone_2.tmp`, `clone_3.tmp`)՝ օգտագործելով `[0-9]` դիմակը (առանց `core_1.sys`-ին դիպչելու)։",
         hint: "rm clone_[0-9].tmp",
         check: (c) => countNames(c.fs, (n) => /^clone_\d\.tmp$/.test(n)) === 0,
       },
       {
-        text: "Անջատեք Ուրվականի պաշտպանիչ վահանը․ հանեք `.oracle.log`-ի 2-րդ տողը (`head -n 2 .oracle.log | tail -n 1`) և `>`-ով գրեք `true_name.txt`-ում։",
+        text: "Անջատեք Ուրվականի պաշտպանիչ վահանը․ հանեք `.oracle.log`-ի ուղիղ 2-րդ տողը (`head` և `tail` pipeline-ով) և `>`-ով գրեք `true_name.txt`-ում։",
         hint: "head -n 2 .oracle.log | tail -n 1 > true_name.txt",
         check: (c) => (read(c.fs, h("grid/true_name.txt")) ?? "").trim() === "boss_real.sys",
       },
       {
-        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Ուայլդքարդ Ուրվականին՝ `rm $(cat true_name.txt)` (կամ `rm boss_real.sys`)։",
+        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Ուայլդքարդ Ուրվականին՝ `true_name.txt`-ում նշված թիրախին (`$(...)`-ով)։",
         hint: "rm $(cat true_name.txt)",
         needs: [0, 1, 2, 3],
         check: (c) => countNames(c.fs, (n) => n === "boss_real.sys") === 0,
@@ -3223,22 +3223,22 @@ export const MISSIONS: Mission[] = [
         check: (c) => ran(c, "ls", (e) => e.flags.includes("l")),
       },
       {
-        text: "Ոչնչացրեք դարպասի մոտ հայտնված `breach.glitch` խափանումը (`rm breach.glitch`)։",
+        text: "Ոչնչացրեք դարպասի մոտ հայտնված `breach.glitch` խափանումը։",
         hint: "rm breach.glitch",
         check: (c) => countNames(c.fs, (n) => n === "breach.glitch") === 0,
       },
       {
-        text: "Տիրոջը (`u`) տվեք գործարկման (`x`) իրավունք `launcher.sh`-ի վրա (`chmod u+x launcher.sh`)։",
+        text: "Տիրոջը (`u`) տվեք գործարկման (`x`) իրավունք `launcher.sh`-ի վրա (`chmod`)։",
         hint: "chmod u+x launcher.sh",
         check: (c) => ((c.fs.inodes[idAt(c.fs, h("citadel/launcher.sh")) ?? -1]?.mode ?? 0) & 0o100) !== 0,
       },
       {
-        text: "Հեռացրեք խմբի (`g`) գրելու (`w`) իրավունքը `shared.cfg`-ից (`chmod g-w shared.cfg`)։",
+        text: "Հեռացրեք խմբի (`g`) գրելու (`w`) իրավունքը `shared.cfg`-ից (`chmod`)։",
         hint: "chmod g-w shared.cfg",
         check: (c) => ((c.fs.inodes[idAt(c.fs, h("citadel/shared.cfg")) ?? -1]?.mode ?? 0) & 0o020) === 0,
       },
       {
-        text: "Մյուսների (`o`) համար սահմանեք միայն կարդալու (`r`) իրավունք `public.key`-ի վրա (`chmod o=r public.key`)։",
+        text: "Մյուսների (`o`) համար սահմանեք միայն կարդալու (`r`) իրավունք `public.key`-ի վրա (`chmod`)։",
         hint: "chmod o=r public.key",
         check: (c) => ((c.fs.inodes[idAt(c.fs, h("citadel/public.key")) ?? -1]?.mode ?? 0) & 0o007) === 0o004,
       },
@@ -3298,7 +3298,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք լրտեսական `rogue_nest` բույնը (`rm -r rogue_nest`)։",
+        text: "Ոչնչացրեք լրտեսական `rogue_nest` բույնը։",
         hint: "rm -r rogue_nest",
         check: (c) => countNames(c.fs, (n) => n === "rogue_nest") === 0,
       },
@@ -3313,7 +3313,7 @@ export const MISSIONS: Mission[] = [
         check: (c) => (c.fs.inodes[idAt(c.fs, h("citadel/master_seed.key")) ?? -1]?.mode ?? 0) === 0o600,
       },
       {
-        text: "Միացրեք խիստ պաշտպանական դիմակ՝ `umask 077`։",
+        text: "Սահմանեք `077` պաշտպանական դիմակը (`umask`)։",
         hint: "umask 077",
         check: (c) => ran(c, "umask", (e) => e.args.includes("077") || e.args.includes("0077")),
       },
@@ -3394,17 +3394,17 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Ոչնչացրեք `root_worm.glitch`-ը (`rm root_worm.glitch`)։",
+        text: "Ոչնչացրեք `root_worm.glitch`-ը։",
         hint: "rm root_worm.glitch",
         check: (c) => countNames(c.fs, (n) => n === "root_worm.glitch") === 0,
       },
       {
-        text: "Ոչնչացրեք `parasite_nest` բույնը (`rm -r parasite_nest`)։",
+        text: "Ոչնչացրեք `parasite_nest` բույնը։",
         hint: "rm -r parasite_nest",
         check: (c) => countNames(c.fs, (n) => n === "parasite_nest") === 0,
       },
       {
-        text: "Վերցրեք `locked_audit.log`-ի տիրապետությունը (`sudo chown architect:architect locked_audit.log`) և դարձրեք այն ընթեռնելի (`chmod 644 locked_audit.log`)։",
+        text: "Վերցրեք `locked_audit.log`-ի տիրապետությունը (`architect:architect`, օգտագործելով `sudo chown`) և դարձրեք այն ընթեռնելի (`644`)։",
         hint: "sudo chown architect:architect locked_audit.log && chmod 644 locked_audit.log",
         check: (c) => {
           const n = c.fs.inodes[idAt(c.fs, h("citadel/locked_audit.log"), false) ?? -1];
@@ -3412,7 +3412,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Ֆիլտրեք `BREACH` տողերը `locked_audit.log`-ից, անցկացրեք `sort | uniq`-ով և `>`-ով գրեք `clean_audit.log`-ի մեջ։",
+        text: "Զտեք `BREACH` տողերը `locked_audit.log`-ից, դասավորեք, հեռացրեք կրկնվող տողերը (`sort` և `uniq`) և արդյունքը `>`-ով պահեք `clean_audit.log`-ում։",
         hint: "grep BREACH locked_audit.log | sort | uniq > clean_audit.log",
         needs: [2],
         check: (c) =>
@@ -3420,7 +3420,7 @@ export const MISSIONS: Mission[] = [
           "BREACH gate-1 token forged\nBREACH gate-2 unauthorized\n",
       },
       {
-        text: "Կողպեք `clean_audit.log`-ը օտարներից (`chmod 600 clean_audit.log`) և ստեղծեք `audit.link` symlink դեպի այն (`ln -s clean_audit.log audit.link`)։",
+        text: "Կողպեք `clean_audit.log`-ը օտարներից (`600`) և ստեղծեք `audit.link` symlink դեպի այն։",
         hint: "chmod 600 clean_audit.log && ln -s clean_audit.log audit.link",
         needs: [3],
         check: (c) =>
@@ -3442,7 +3442,7 @@ export const MISSIONS: Mission[] = [
     start: h("citadel"),
     story: [
       "Նախքան Ռութքիթ Տիրակալի գլխավոր պահոց մտնելը, անհրաժեշտ է վերականգնել Միջնաբերդի պաշտպանական կոդերը՝ համադրելով բոլոր 5 Արարների հրամանները։",
-      "Բացեք արգելափակված `.root_ptr` ցուցիչը `sudo chmod 644`-ով, կառուցեք `secure` սենյակը, `cp $(cat .root_ptr)`-ով պատճենեք գաղտնի մատրիցան, ընտրեք միայն թվային `key_[0-9].pem` բանալիները, հաշվեք ապակոդավորման թիվը և կողպեք արդյունքը `chmod 600`-ով։",
+      "Բացեք արգելափակված `.root_ptr` ցուցիչը `sudo chmod 644`-ով, կառուցեք `secure` սենյակը, `$(...)` միջոցով պատճենեք գաղտնի մատրիցան, ընտրեք միայն թվային `[0-9]` բանալիները, հաշվեք ապակոդավորման թիվը և կողպեք արդյունքը `chmod 600`-ով։",
     ],
     concepts: [
       { term: "Բոլոր 5 Արարների սինթեզ", text: "Այստեղ միավորվում են `mkdir -p`, `cp`, `[0-9]`, `$(...)`, `head | tail`, `$((...))` և `sudo chmod` հրամանները։" },
@@ -3488,21 +3488,21 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Բացեք թաքնված `.root_ptr` ֆայլի թույլտվությունները (`sudo chmod 644 .root_ptr`) և կառուցեք `secure` սենյակը (`mkdir -p secure`)։",
+        text: "Դարձրեք թաքնված `.root_ptr` ֆայլը ընթեռնելի (`644`, օգտագործելով `sudo`) և կառուցեք `secure` սենյակը։",
         hint: "sudo chmod 644 .root_ptr && mkdir -p secure",
         check: (c) =>
           (c.fs.inodes[idAt(c.fs, h("citadel/.root_ptr"), false) ?? -1]?.mode ?? 0) === 0o644 &&
           typeAt(c.fs, h("citadel/secure")) === "dir",
       },
       {
-        text: "Օգտագործեք `$(cat .root_ptr)`՝ գաղտնի մատրիցան `secure/matrix.dat` պատճենելու համար (`cp $(cat .root_ptr) secure/matrix.dat`)։",
+        text: "Օգտագործեք command substitution (`$(...)`)՝ `.root_ptr`-ում նշված գաղտնի մատրիցան պատճենելու համար որպես `secure/matrix.dat`։",
         hint: "cp $(cat .root_ptr) secure/matrix.dat",
         needs: [0],
         check: (c) =>
           (read(c.fs, h("citadel/secure/matrix.dat")) ?? "").includes("CODE_MULT=25 * 4"),
       },
       {
-        text: "Պատճենեք միայն թվային `key_[0-9].pem` ֆայլերը `secure/` սենյակ (`cp key_[0-9].pem secure/`)։",
+        text: "Պատճենեք միայն մեկ թվանշան ունեցող `key` (`.pem`) ֆայլերը `secure/` սենյակ (օգտագործելով `[0-9]` դիմակը, առանց `key_old.pem`-ի)։",
         hint: "cp key_[0-9].pem secure/",
         needs: [0],
         check: (c) =>
@@ -3511,7 +3511,7 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("citadel/secure/key_old.pem")) == null,
       },
       {
-        text: "Հանեք `secure/matrix.dat`-ի 2-րդ տողը (`head -n 2 secure/matrix.dat | tail -n 1 > secure/unlock.txt`), `>>`-ով ավելացրեք `$((25 * 4))` հաշվարկը և կողպեք ֆայլը `chmod 600 secure/unlock.txt`-ով։",
+        text: "Հանեք `secure/matrix.dat`-ի ուղիղ 2-րդ տողը (`head` և `tail` pipeline-ով) դեպի `secure/unlock.txt`, ապա `>>`-ով ավելացրեք այդ տողում գրված `25 * 4` արտահայտության արդյունքը (`$((...))`) և կողպեք `secure/unlock.txt`-ը `600` թույլտվությամբ։",
         hint: "head -n 2 secure/matrix.dat | tail -n 1 > secure/unlock.txt && echo $((25 * 4)) >> secure/unlock.txt && chmod 600 secure/unlock.txt",
         needs: [1],
         check: (c) =>
@@ -3533,7 +3533,7 @@ export const MISSIONS: Mission[] = [
     start: h("citadel"),
     story: [
       "Միջնաբերդի ավտոմատ պաշտպանական սկրիպտները (`turret_1.sh`, `turret_2.sh`) կողպված են `root`-ի կողմից (`000`), իսկ նոր տեղակայման բանալին պետք է ստեղծվի խիստ `umask 077` ռեժիմում։",
-      "Կառուցեք `defense/active` սենյակը, միացրեք `umask 077`, վերցրեք `turret_[0-9].sh` ֆայլերի տիրապետությունն ու գործարկման իրավունքը (`sudo chown` և `chmod 750`), պատճենեք դրանք `defense/active/`, ստեղծեք պաշտպանված `deploy.key` և կապեք `defense/current_key` symlink-ը։",
+      "Կառուցեք `defense/active` սենյակը, միացրեք `umask 077`, վերցրեք թվային `turret` սկրիպտների (`[0-9]`) տիրապետությունն ու գործարկման իրավունքը (`sudo chown` և `chmod 750`), պատճենեք դրանք `defense/active/`, ստեղծեք պաշտպանված `deploy.key` և կապեք `defense/current_key` symlink-ը։",
     ],
     concepts: [
       { term: "umask 077 + touch", text: "`umask 077` սահմանելուց հետո ցանկացած նոր ստեղծվող ֆայլ (`touch`) ստանում է `600` (`rw-------`) թույլտվություն։" },
@@ -3580,14 +3580,14 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Կառուցեք `defense/active` սենյակը (`mkdir -p defense/active`) և միացրեք `umask 077` պաշտպանիչ դիմակը։",
+        text: "Կառուցեք `defense/active` սենյակը և սահմանեք `077` պաշտպանիչ դիմակը (`umask`)։",
         hint: "mkdir -p defense/active && umask 077",
         check: (c) =>
           typeAt(c.fs, h("citadel/defense/active")) === "dir" &&
           ran(c, "umask", (e) => e.args.includes("077") || e.args.includes("0077")),
       },
       {
-        text: "Վերցրեք միայն թվային `turret_[0-9].sh` սկրիպտների տիրապետությունը (`sudo chown architect:architect turret_[0-9].sh`), դարձրեք դրանք `750` (`chmod 750 turret_[0-9].sh`) և պատճենեք `defense/active/`։",
+        text: "Վերցրեք միայն թվային `turret` (`.sh`, `[0-9]` դիմակով) սկրիպտների տիրապետությունը (`architect:architect`, օգտագործելով `sudo chown`), դարձրեք դրանք `750` և պատճենեք `defense/active/`։",
         hint: "sudo chown architect:architect turret_[0-9].sh && chmod 750 turret_[0-9].sh && cp turret_[0-9].sh defense/active/",
         needs: [0],
         check: (c) =>
@@ -3605,7 +3605,7 @@ export const MISSIONS: Mission[] = [
           (c.fs.inodes[idAt(c.fs, h("citadel/defense/active/deploy.key"), false) ?? -1]?.mode ?? 0) === 0o600,
       },
       {
-        text: "Ֆիլտրեք `DEPLOY_OK` տողերը `citadel_events.log`-ից, դասավորեք ու մաքրեք կրկնությունները (`grep DEPLOY_OK citadel_events.log | sort | uniq > defense/active/deploy.key`)։",
+        text: "Զտեք `DEPLOY_OK` տողերը `citadel_events.log`-ից, դասավորեք, հեռացրեք կրկնվող տողերը (`sort` և `uniq`) և արդյունքը `>`-ով պահեք `defense/active/deploy.key`-ում։",
         hint: "grep DEPLOY_OK citadel_events.log | sort | uniq > defense/active/deploy.key",
         needs: [2],
         check: (c) =>
@@ -3613,7 +3613,7 @@ export const MISSIONS: Mission[] = [
           (c.fs.inodes[idAt(c.fs, h("citadel/defense/active/deploy.key"), false) ?? -1]?.mode ?? 0) === 0o600,
       },
       {
-        text: "Ստեղծեք `defense/current_key` symlink-ը, որը ցույց է տալիս `active/deploy.key`-ի վրա (`ln -s active/deploy.key defense/current_key`)։",
+        text: "Ստեղծեք `defense/current_key` symlink-ը, որը ցույց է տալիս `active/deploy.key`-ի վրա։",
         hint: "ln -s active/deploy.key defense/current_key",
         needs: [3],
         check: (c) =>
@@ -3635,7 +3635,7 @@ export const MISSIONS: Mission[] = [
     start: h("citadel"),
     story: [
       "Ռութքիթ Տիրակալի պահոցի նախաշեմին փակված է `sealed_sector` արգելագոտին (`root`, `700`)։ Նրա ներսում թաքնված է `.vault_target` ցուցիչը, վավեր ու կեղծ նույնականացման լոգեր (`auth_a.log`, `auth_b.log`) և հաշվարկային մատրիցա։",
-      "Ապակողպեք `sealed_sector`-ը (`sudo chown` և `chmod 755`), ռենտգենով գտեք թաքնված `.vault_target`-ը (`ls -la`), բացեք այն (`sudo chmod 644`), hard link արեք `$(cat ...)`-ով դեպի `ready/vault_prep/`, զտեք բոլոր `AUTH` տողերը (առանց `FAKE`-ի) և ավելացրեք `$((64 * 8 - 12))` հաշվարկը։",
+      "Ապակողպեք `sealed_sector`-ը (`sudo chown` և `chmod 755`), ռենտգենով գտեք թաքնված `.vault_target`-ը (`ls -la`), բացեք այն (`sudo chmod 644`), hard link արեք `$(...)`-ով դեպի `ready/vault_prep/`, զտեք բոլոր `AUTH` տողերը (առանց `FAKE`-ի) և ավելացրեք թվաբանական հաշվարկը (`$((...))`)։",
     ],
     concepts: [
       { term: "Կողպված սենյակի բացում", text: "Նախ փոխեք փակ directory-ի տիրոջը `sudo chown`-ով, ապա տվեք `chmod 755`՝ ներսի ֆայլերը սկանավորելու համար։" },
@@ -3702,7 +3702,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Բացեք `sealed_sector` սենյակը (`sudo chown architect:architect sealed_sector && chmod 755 sealed_sector`) և սկանավորեք թաքնված ֆայլերը `ls -la sealed_sector`-ով։",
+        text: "Վերցրեք `sealed_sector` սենյակի տիրապետությունը (`architect:architect`, օգտագործելով `sudo chown`), դարձրեք այն `755` և ռենտգենով (`ls -la`) սկանավորեք ներսի թաքնված ֆայլերը։",
         hint: "sudo chown architect:architect sealed_sector && chmod 755 sealed_sector && ls -la sealed_sector",
         check: (c) =>
           c.fs.inodes[idAt(c.fs, h("citadel/sealed_sector"), false) ?? -1]?.owner === "architect" &&
@@ -3710,7 +3710,7 @@ export const MISSIONS: Mission[] = [
           ran(c, "ls", (e) => e.flags.includes("a") || e.flags.includes("A")),
       },
       {
-        text: "Բացեք թաքնված `.vault_target` ցուցիչը (`sudo chmod 644 sealed_sector/.vault_target`) և կառուցեք `ready/vault_prep` սենյակը (`mkdir -p ready/vault_prep`)։",
+        text: "Դարձրեք թաքնված `sealed_sector/.vault_target` ցուցիչը ընթեռնելի (`644`, օգտագործելով `sudo`) և կառուցեք `ready/vault_prep` սենյակը։",
         hint: "sudo chmod 644 sealed_sector/.vault_target && mkdir -p ready/vault_prep",
         needs: [0],
         check: (c) =>
@@ -3718,7 +3718,7 @@ export const MISSIONS: Mission[] = [
           typeAt(c.fs, h("citadel/ready/vault_prep")) === "dir",
       },
       {
-        text: "Ստեղծեք hard link `$(cat sealed_sector/.vault_target)`-ի համար `ready/vault_prep/core_seal.dat` անունով (`ln $(cat sealed_sector/.vault_target) ready/vault_prep/core_seal.dat`)։",
+        text: "Ստեղծեք hard link `sealed_sector/.vault_target`-ում նշված ֆայլի համար (`$(...)` միջոցով) `ready/vault_prep/core_seal.dat` անունով։",
         hint: "ln $(cat sealed_sector/.vault_target) ready/vault_prep/core_seal.dat",
         needs: [1],
         check: (c) => {
@@ -3728,7 +3728,7 @@ export const MISSIONS: Mission[] = [
         },
       },
       {
-        text: "Միավորեք և զտեք վավեր նույնականացման տողերը՝ `cat sealed_sector/auth_[ab].log | grep AUTH | grep -v FAKE | sort | uniq > ready/vault_prep/valid_auth.log`։",
+        text: "Միավորեք `sealed_sector/`-ի `auth_a.log` և `auth_b.log` ֆայլերը (`[ab]` դիմակով), զտեք `AUTH` տողերը, բացառեք `FAKE` տողերը (`grep -v`), դասավորեք ու մաքրեք կրկնությունները և պահեք `ready/vault_prep/valid_auth.log`-ում։",
         hint: "cat sealed_sector/auth_[ab].log | grep AUTH | grep -v FAKE | sort | uniq > ready/vault_prep/valid_auth.log",
         needs: [1],
         check: (c) =>
@@ -3737,7 +3737,7 @@ export const MISSIONS: Mission[] = [
           ),
       },
       {
-        text: "Կարդացեք `sealed_sector/formula.dat`-ի 2-րդ տողը (`head -n 2 sealed_sector/formula.dat | tail -n 1`), ավելացրեք `$((64 * 8 - 12))` արդյունքը `ready/vault_prep/valid_auth.log`-ի վերջից (`>>`) և կողպեք այն `chmod 600`-ով։",
+        text: "Կարդացեք `sealed_sector/formula.dat`-ի ուղիղ 2-րդ տողը (`head` և `tail` pipeline-ով), ավելացրեք (`>>`) այնտեղ գտնված բանաձևի արդյունքը (`$((...))`) `ready/vault_prep/valid_auth.log`-ի վերջից և կողպեք ֆայլը `600` թույլտվությամբ։",
         hint: "head -n 2 sealed_sector/formula.dat | tail -n 1 && echo $((64 * 8 - 12)) >> ready/vault_prep/valid_auth.log && chmod 600 ready/vault_prep/valid_auth.log",
         needs: [3],
         check: (c) =>
@@ -3762,7 +3762,7 @@ export const MISSIONS: Mission[] = [
     start: h("citadel"),
     story: [
       "Վերջնական մարտը սկսվում է։ Արար V-ի և ամբողջ Mainframe-ի գլխավոր թշնամին՝ Ռութքիթ Տիրակալը (Rootkit Overlord), կողպվել է `vault` պահոցի ներսում (`owner: root`, `mode: 700`) և պատված է Արմատական Էներգետիկ Վահանով (`պաշտպանիչ վահան`)։",
-      "Տիրակալի պաշտպանիչ վահանն անջատելու համար․ 1) `sudo chown` և `chmod 755`-ով բացեք `vault`-ը և մտեք ներս (`cd vault`), 2) ոչնչացրեք նրա պահապան `rootkit_nest` բույնը (`rm -r`) և `guard.glitch`-ը (`rm`), 3) բացեք `.shield_matrix.log`-ը (`sudo chmod 644`), ֆիլտրեք `OVERRIDE_KEY` տողը դեպի `override.key`, և 4) կոտրեք `rootkit.boss`-ի `400` զրահը (`sudo chmod 644 rootkit.boss`)։ Ապա ոչնչացրեք նրան `rm rootkit.boss`-ով։",
+      "Տիրակալի պաշտպանիչ վահանն անջատելու համար․ 1) `sudo chown` և `chmod 755`-ով բացեք `vault`-ը և մտեք ներս, 2) ոչնչացրեք նրա պահապան `rootkit_nest` բույնը (`rm -r`) և `guard.glitch`-ը (`rm`), 3) բացեք `.shield_matrix.log`-ը (`sudo chmod 644`), ֆիլտրեք `OVERRIDE_KEY` տողը դեպի `override.key`, և 4) կոտրեք `rootkit.boss`-ի `400` զրահը (`sudo chmod 644`)։ Ապա ոչնչացրեք `rootkit.boss`-ին։",
     ],
     concepts: [
       { term: "sudo CMD", text: "Գործարկում է հրամանը գերօգտատիրոջ (`root`) անսահմանափակ իրավունքներով։" },
@@ -3819,7 +3819,7 @@ export const MISSIONS: Mission[] = [
     },
     objectives: [
       {
-        text: "Վերցրեք `vault` պահոցի տիրապետությունը `root`-ից (`sudo chown architect:architect vault`), բացեք դրա թույլտվությունները (`chmod 755 vault`) և մտեք ներս (`cd vault`)։",
+        text: "Վերցրեք `vault` պահոցի տիրապետությունը `root`-ից (`architect:architect`, օգտագործելով `sudo chown`), դարձրեք այն `755` և մտեք ներս։",
         hint: "sudo chown architect:architect vault && chmod 755 vault && cd vault",
         check: (c) =>
           c.fs.inodes[idAt(c.fs, h("citadel/vault"), false) ?? -1]?.owner === "architect" &&
@@ -3827,31 +3827,31 @@ export const MISSIONS: Mission[] = [
           c.cwd === h("citadel/vault"),
       },
       {
-        text: "Ոչնչացրեք Տիրակալի պահապան `guard.glitch` խափանումը (`rm guard.glitch`)։",
+        text: "Ոչնչացրեք Տիրակալի պահապան `guard.glitch` խափանումը։",
         hint: "rm guard.glitch",
         needs: [0],
         check: (c) => countNames(c.fs, (n) => n === "guard.glitch") === 0,
       },
       {
-        text: "Ոչնչացրեք `rootkit_nest` խափանումների բույնը (`rm -r rootkit_nest`)։",
+        text: "Ոչնչացրեք `rootkit_nest` խափանումների բույնը։",
         hint: "rm -r rootkit_nest",
         needs: [0],
         check: (c) => countNames(c.fs, (n) => n === "rootkit_nest") === 0,
       },
       {
-        text: "Բացեք թաքնված `.shield_matrix.log`-ը (`sudo chmod 644 .shield_matrix.log`), ֆիլտրեք `OVERRIDE_KEY` տողը և `>`-ով գրեք `override.key`-ում։",
+        text: "Դարձրեք թաքնված `.shield_matrix.log` ֆայլը ընթեռնելի (`644`, օգտագործելով `sudo`), ապա զտեք `OVERRIDE_KEY` տողը և `>`-ով պահեք `override.key`-ում։",
         hint: "sudo chmod 644 .shield_matrix.log && grep OVERRIDE_KEY .shield_matrix.log > override.key",
         needs: [0],
         check: (c) => (read(c.fs, h("citadel/vault/override.key")) ?? "").trim() === "OVERRIDE_KEY=ROOT-OMEGA-00",
       },
       {
-        text: "Անջատեք `rootkit.boss`-ի պաշտպանիչ վահանը՝ փոխելով նրա թույլտվությունը `644`-ի (`sudo chmod 644 rootkit.boss`)։",
+        text: "Անջատեք `rootkit.boss`-ի պաշտպանիչ վահանը՝ փոխելով նրա թույլտվությունը `644`-ի (օգտագործելով `sudo`)։",
         hint: "sudo chmod 644 rootkit.boss",
         needs: [0, 1, 2, 3],
         check: (c) => (c.fs.inodes[idAt(c.fs, h("citadel/vault/rootkit.boss"), false) ?? -1]?.mode ?? 0) === 0o644,
       },
       {
-        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Ռութքիթ Տիրակալին՝ `rm rootkit.boss` և ազատագրեք Mainframe-ը։",
+        text: "Պաշտպանիչ վահանն անջատված է․ ոչնչացրեք Ռութքիթ Տիրակալին (`rootkit.boss`) և ազատագրեք Mainframe-ը։",
         hint: "rm rootkit.boss",
         needs: [0, 1, 2, 3, 4],
         check: (c) => countNames(c.fs, (n) => n === "rootkit.boss") === 0,
